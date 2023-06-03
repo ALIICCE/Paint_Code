@@ -1,298 +1,224 @@
-# Librerias
-import pygame
+'''Este codigo es un paint a base de comandos que escribes en terminal
+y se ven reflegados en la ventana de pygame'''
 import math
-
-# Inicializar Pygame
-pygame.init()
+import sys
+import pygame
 
 # Crear una superficie de 800x600 píxeles
-width = 800
-height = 600
-surface = pygame.display.set_mode((width, height))
-background_color = (0,0,0)
-surface.fill(background_color)
+WIDTH = 800
+HEIGHT = 600
+SURFACE = pygame.display.set_mode((WIDTH, HEIGHT))
+BACKGROUND_COLOR = (0, 0, 0)
+SURFACE.fill(BACKGROUND_COLOR)
 pygame.display.flip()
 
-# Color predeteminado de la pantalla
-color = (255, 120, 10)
+# Colores predeterminados
+COLOR = (255, 120, 10)
 
 # Colores intercambiables para el fondo
-colors = {
+COLORS = {
     'rojo': (255, 0, 0),
     'verde': (0, 255, 0),
     'azul': (0, 0, 255),
     'amarillo': (255, 255, 0),
     'blanco': (255, 255, 255),
-    'negro': (0, 0, 0)}
-tamano_pixel = 1
-trazos = []
-
-# Objeto y sus metodos
+    'negro': (0, 0, 0)
+}
 class Triangulos:
-
-    def dibujar_triangulo_equilatero(x, y, lado):
-        h = int(lado * math.sqrt(3) / 2)
-        p1 = (x, y)
-        p2 = (x + lado, y)
-        p3 = (x + lado // 2, y - h)
-        pygame.draw.polygon(surface, color, [p1, p2, p3], tamano_pixel)
+    '''
+    Esta clase contiene los tres tipos de triangulos
+    '''
+    @staticmethod
+    def dibujar_triangulo_equilatero(tex_, tey_, lado_):
+        '''
+        Aqui estan las formulas del triangulo equilatero
+        '''
+        rell_ = int(lado_ * math.sqrt(3) / 2)
+        parte_1 = (tex_, tey_)
+        parte_2 = (tex_ + lado_, tey_)
+        parte_3 = (tex_ + lado_ // 2, tey_ - rell_)
+        pygame.draw.polygon(SURFACE, COLOR, [parte_1, parte_2, parte_3], TAMANO_PIXEL)
         pygame.display.flip()
 
-    def dibujar_triangulo_isoceles(x, y, base, altura):
-        p1 = (x, y)
-        p2 = (x + base, y)
-        p3 = (x + base // 2, y - altura)
-        pygame.draw.polygon(surface, color, [p1, p2, p3], tamano_pixel)
+    @staticmethod
+    def dibujar_triangulo_isoceles(tix_, tiy_, base, altura):
+        '''
+        Aqui estan las formulas del triangulo isoceles
+        '''
+        parte_4 = (tix_, tiy_)
+        parte_5 = (tix_ + base, tiy_)
+        parte_6 = (tix_ + base // 2, tiy_ - altura)
+        pygame.draw.polygon(SURFACE, COLOR, [parte_4, parte_5, parte_6], TAMANO_PIXEL)
         pygame.display.flip()
 
-    def dibujar_triangulo_escaleno(x1, y1, x2, y2, x3, y3):
-        p1 = (x1, y1)
-        p2 = (x2, y2)
-        p3 = (x3, y3)
-        pygame.draw.polygon(surface, color, [p1, p2, p3], tamano_pixel)
+    @staticmethod
+    def dibujar_triangulo_escaleno(tesx_, tesy_, tesx_1, tesy_1, tesx_2, tesy_2):
+        '''
+        Aqui estan las formulas del triangulo escaleno
+        '''
+        parte_7 = (tesx_, tesy_)
+        parte_8 = (tesx_1, tesy_1)
+        parte_9 = (tesx_2, tesy_2)
+        pygame.draw.polygon(SURFACE, COLOR, [parte_7, parte_8, parte_9], TAMANO_PIXEL)
+        pygame.display.flip()
+
+TAMANO_PIXEL = 1
+TRAZOS = []
 
 # Funciones
-def help():
-    print ("--Bienvenidos a Paint--\n"
-           "Los Comandos que se pueden utilizar son los siguientes:\n\n"
-           "exit; con este cierras el programa\n"
-           "linea -h; puedes dibujar una linea horizontal, te pedira ingresar los valores\n"
-           "linea -v; puedes dibujar una linea vertical, te pedira ingresar los valores\n"
-           "cambiar color; puedes cambiar el color de los dibujos, Puedes elejir entre: rojo,verde,azul,amarillo y cian\n"
-           "linea; podras hacer una linea de un punto A a un punto B, te pedira ingresar los valores\n"
-           "configurar_tamano_pixel; puedes cambiar el grosor de las lineas, te pedira ingresar el tamano\n"
-           "cuadrado; podras hacer un cuadrado, te pedira ingresar los valores\n"
-           "triangulo; puedes hacer un triangulo, te pedira ingresar seis valores\n"
-           "circulo; puedes hacer un circulo, te pedira ingresar los valores\n"
-           "rectangulo; dibujara un rectangulo, le tendras que ingresar los valores\n"
-           "color_fondo; puedes cambiar el fondo de la ventana, Puedes elejir entre: rojo,verde,azul,amarillo,blanco y negro\n"
-           "equilatero; dibujara un triangulo equilatero, te pedira ingresar los valores\n"
-           "isoceles; dibujara un triangulo isoceles, te pedira ingresar los valores\n"
-           "escaleno; dibujara un triangulo escaleno, te pedira ingresar los valores\n")
 
-def color_fondo():
-    color_name = input("Ingrese el nombre del color de fondo: ")
-    color = colors.get(color_name.lower())
-    if color is None:
-        print("Color no válido")
-        return
-    surface.fill(color)
+def rectangulo_command():
+    '''
+    Aqui estan las formulas del rectangulo
+    '''
+    rectx = int(input("Ingrese la coordenada x del centro del rectangulo: "))
+    recty = int(input("Ingrese la coordenada y del centro del rectangulo: "))
+    width = int(input("Ingrese el ancho del rectangulo: "))
+    height = int(input("Ingrese el largo del rectangulo: "))
+    pygame.draw.rect(SURFACE,COLOR,pygame.Rect(rectx,recty,width*TAMANO_PIXEL,height*TAMANO_PIXEL))
     pygame.display.flip()
 
-def cambiar_color(nombre_color):
-    global color
-    if nombre_color == "rojo":
-        color = (255, 0, 0)
-    elif nombre_color == "verde":
-        color = (0, 255, 0)
-    elif nombre_color == "azul":
-        color = (0, 0, 255)
-    elif nombre_color == "amarillo":
-        color = (255, 255, 0)
-    elif nombre_color == "cian":
-        color = (0, 255, 255)
+def linea_h_command():
+    '''
+    Aqui estan las formulas para dibujar una linea horizontal
+    '''
+    linea_x = int(input("Ingrese la coordenada x inicial de la línea horizontal: "))
+    linea_y = int(input("Ingrese la coordenada x final de la línea horizontal: "))
+    coord_y = int(input("Ingrese la coordenada y de la línea horizontal: "))
+    pygame.draw.line(SURFACE, COLOR, (linea_x, coord_y), (linea_y, coord_y), TAMANO_PIXEL)
+    pygame.display.flip()
+
+def linea_v_command():
+    '''
+    Aqui estan las formulas para dibujar una linea vertical
+    '''
+    linea_a = int(input("Ingrese la coordenada x de la línea vertical: "))
+    linea_b = int(input("Ingrese la coordenada y inicial de la línea vertical: "))
+    linea_c = int(input("Ingrese la coordenada y final de la línea vertical: "))
+    pygame.draw.line(SURFACE, COLOR, (linea_a, linea_b), (linea_a, linea_c), TAMANO_PIXEL)
+    pygame.display.flip()
+
+def linea_command():
+    '''
+    Aqui estan las formulas para dibujar una linea de punto A a un punto B
+    '''
+    linea_d = int(input("Ingrese la coordenada x inicial de la línea: "))
+    linea_e = int(input("Ingrese la coordenada y inicial de la línea: "))
+    linea_f = int(input("Ingrese la coordenada x final de la línea: "))
+    linea_g = int(input("Ingrese la coordenada y final de la línea: "))
+    pygame.draw.line(SURFACE, COLOR, (linea_d, linea_e), (linea_f, linea_g), TAMANO_PIXEL)
+    pygame.display.flip()
+
+def circulo_command():
+    '''
+    Aqui estan las formulas del circulo
+    '''
+    cir_x = int(input("Ingrese la coordenada x del centro del círculo: "))
+    cir_y = int(input("Ingrese la coordenada y del centro del círculo: "))
+    radio = int(input("Ingrese el radio del círculo: "))
+    pygame.draw.circle(SURFACE, COLOR, (cir_x, cir_y), radio, TAMANO_PIXEL)
+    pygame.display.flip()
+
+def cambiar_color_command():
+    '''
+    Esta funcion cambia el color de las lineas dibujadas
+    '''
+    global COLOR
+    color = input("Elige un color (rojo, verde, azul, amarillo, blanco o negro): ")
+    if color in COLORS:
+        COLOR = COLORS[color]
     else:
-        print("Color no válido")
+        print("Color no válido.")
 
-def linea_h(i, desplazamiento):
-    for j in range(0, 100):
-        for k in range(tamano_pixel):
-            surface.set_at((100 + desplazamiento + j, 200 + i + k), color)
+def color_fondo_command():
+    '''
+    Esta funcion cambia el color del fondo
+    '''
+    color = input("Elige un color de fondo (rojo, verde, azul, amarillo, blanco o negro): ")
+    if color in COLORS:
+        background_color = COLORS[color]
+        SURFACE.fill(background_color)
+        pygame.display.flip()
+    else:
+        print("Color no válido.")
+
+def configurar_tamano_pixel_command():
+    '''
+    Esta funcion cambia el tamano de las lineas dibujadas
+    '''
+    global TAMANO_PIXEL
+    tamano = int(input("Ingrese el grosor de las líneas: "))
+    TAMANO_PIXEL = tamano
+
+def cuadrado_command():
+    '''
+    Aqui estan las formulas del cuadrado
+    '''
+    cua_x = int(input("Ingrese la coordenada x del vértice superior izquierdo del cuadrado: "))
+    cua_y = int(input("Ingrese la coordenada y del vértice superior izquierdo del cuadrado: "))
+    lado = int(input("Ingrese la longitud del lado del cuadrado: "))
+    pygame.draw.rect(SURFACE, COLOR, (cua_x, cua_y, lado, lado), TAMANO_PIXEL)
     pygame.display.flip()
 
-def linea_v(i, desplazamiento):
-    for j in range(0, 100):
-        for k in range(tamano_pixel):
-            surface.set_at((100 + i + k, 200 + desplazamiento + j), color)
-    pygame.display.flip()
+def exit_command():
+    '''
+    Esta funcion hace que te salgas del programa
+    '''
+    pygame.quit()
+    sys.exit()
 
-def dibujar_linea(A, B):
-    pygame.draw.line(surface, color, A, B, tamano_pixel)
-    pygame.display.flip()
-    trazos.append((A, B))
+def main():
+    '''
+    Aqui se encontrara toda la logica del codigo
+    '''
+    while True:
+        command = input("Ingrese un comando (\n circulo\n cambiar_color\n color_fondo\n"
+        " configurar_tamano_pixel\n cuadrado\n equilatero\n isoceles\n escaleno\n"
+        " rectangulo\n linea -h\n linea -v\n linea\n exit): ")
+        if command == "circulo":
+            circulo_command()
+        elif command == "cambiar_color":
+            cambiar_color_command()
+        elif command == "configurar_tamano_pixel":
+            configurar_tamano_pixel_command()
+        elif command == "cuadrado":
+            cuadrado_command()
+        elif command == "rectangulo":
+            rectangulo_command()
+        elif command == "linea -h":
+            linea_h_command()
+        elif command == "linea -v":
+            linea_v_command()
+        elif command == "linea":
+            linea_command()
+        elif command == "color_fondo":
+            color_fondo_command()
+        elif command == "exit":
+            exit_command()
+        # Comandos de los objetos
+        elif command == "equilatero":
+            tex_ = int(input("Ingrese la coordenada x: "))
+            tey_ = int(input("Ingrese la coordenada y: "))
+            lado_ = int(input("Ingrese el tamaño del lado: "))
+            Triangulos.dibujar_triangulo_equilatero(tex_, tey_, lado_)
 
-def dibujar_cuadrado(x, y, lado):
-    for i in range(x, x + lado):
-        for j in range(y, y + lado):
-            surface.set_at((i, j), color)
-    pygame.display.flip()
-    configurar_tamano_pixel(tamano_pixel)
+        elif command == "isoceles":
+            tix_ = int(input("Ingrese la coordenada x: "))
+            tiy_ = int(input("Ingrese la coordenada y: "))
+            base = int(input("Ingrese el tamaño de la base: "))
+            altura = int(input("Ingrese la altura: "))
+            Triangulos.dibujar_triangulo_isoceles(tix_, tiy_, base, altura)
 
-def dibujar_rectangulo(x, y, width, height):
-    pygame.draw.rect(surface, color, pygame.Rect(x, y, width * tamano_pixel, height * tamano_pixel))
-    pygame.display.flip()
-
-def dibujar_triangulo(x1, y1, x2, y2, x3, y3):
-    pygame.draw.polygon(surface, color, [(x1, y1), (x2, y2), (x3, y3)])
-    pygame.display.flip()
-    configurar_tamano_pixel(tamano_pixel)
-
-def circulo(x_centro, y_centro, radio):
-    for i in range(360):
-        angulo_rad = math.radians(i)
-        x = int(x_centro + radio * math.cos(angulo_rad))
-        y = int(y_centro + radio * math.sin(angulo_rad))
-        surface.set_at((x, y), color)
-    pygame.display.flip()
-    configurar_tamano_pixel(tamano_pixel)
-
-def configurar_tamano_pixel(nuevo_tamano):
-    global tamano_pixel
-    tamano_pixel = max(1, nuevo_tamano)
-
-# Loop principal
-while True:
-    cmd = input("cmd> ")
-    if cmd == "exit":
-        pygame.quit()
-
-    elif cmd == "help":
-        help()
-    
-    elif cmd.startswith("linea -h"):
-        params = cmd.split(" ")
-        if len(params) >= 4:
-            try:
-                i = int(params[2])
-                desplazamiento = int(params[3])
-                linea_h(i, desplazamiento)
-            except ValueError:
-                print("Comando incorrecto. Uso: linea -h <valor_i> <desplazamiento>")
+        elif command == "escaleno":
+            tesx_ = int(input("Ingrese la coordenada x1: "))
+            tesy_ = int(input("Ingrese la coordenada y1: "))
+            tesx_1 = int(input("Ingrese la coordenada x2: "))
+            tesy_1 = int(input("Ingrese la coordenada y2: "))
+            tesx_2 = int(input("Ingrese la coordenada x3: "))
+            tesy_2 = int(input("Ingrese la coordenada y3: "))
+            Triangulos.dibujar_triangulo_escaleno(tesx_, tesy_, tesx_1, tesy_1, tesx_2, tesy_2)
         else:
-            print("Comando incorrecto. Uso: linea -h <valor_i> <desplazamiento>")
-    elif cmd.startswith("linea -v"):
-        params = cmd.split(" ")
-        if len(params) >= 4:
-            try:
-                i = int(params[2])
-                desplazamiento = int(params[3])
-                linea_v(i, desplazamiento)
-            except ValueError:
-                print("Comando incorrecto. Uso: linea -v <valor_i> <desplazamiento>")
-        else:
-            print("Comando incorrecto. Uso: linea -v <valor_i> <desplazamiento>")
-    
-    elif cmd.startswith("cambiar color"):
-        params = cmd.split(" ")
-        if len(params) >= 2:
-            nombre_color = params[2]
-            cambiar_color(nombre_color)
-        else:
-            print("Comando incorrecto. Uso: cambiar color <nombre_color>")
+            print("Comando no válido.")
 
-    elif cmd.startswith("linea"):
-        params = cmd.split(" ")
-        if len(params) >= 5:
-            try:
-                x1 = int(params[1])
-                y1 = int(params[2])
-                x2 = int(params[3])
-                y2 = int(params[4])
-                A = (x1, y1)
-                B = (x2, y2)
-                dibujar_linea(A, B)
-            except ValueError:
-                print("Comando incorrecto. Uso: linea <x1> <y1> <x2> <y2>")
-        else:
-            print("Comando incorrecto. Uso: linea <x1> <y1> <x2> <y2>")
-
-    elif cmd.startswith("configurar_tamano_pixel"):
-        params = cmd.split(" ")
-        if len(params) == 2:
-            try:
-                nuevo_tamano = int(params[1])
-                configurar_tamano_pixel(nuevo_tamano)
-                print("Tamaño de píxel configurado:", tamano_pixel)
-            except ValueError:
-                print("Comando incorrecto. Uso: configurar_tamano_pixel <tamano>")
-        else:
-            print("Comando incorrecto. Uso: configurar_tamano_pixel <tamano>")
-
-    elif cmd.startswith("cuadrado"):
-        params = cmd.split(" ")
-        if len(params) == 4:
-            try:
-                x = int(params[1])
-                y = int(params[2])
-                lado = int(params[3])
-                dibujar_cuadrado(x, y, lado)
-            except ValueError:
-                print("Comando incorrecto. Uso: cuadrado <x> <y> <lado>")
-        else:
-            print("Comando incorrecto. Uso: cuadrado <x> <y> <lado>")
-
-    elif cmd.startswith("triangulo"):
-        params = cmd.split(" ")
-        if len(params) == 7:
-            try:
-                x1 = int(params[1])
-                y1 = int(params[2])
-                x2 = int(params[3])
-                y2 = int(params[4])
-                x3 = int(params[5])
-                y3 = int(params[6])
-                dibujar_triangulo(x1, y1, x2, y2, x3, y3)
-            except ValueError:
-                print("Comando incorrecto. Uso: triangulo <x1> <y1> <x2> <y2> <x3> <y3>")
-        else:
-            print("Comando incorrecto. Uso: triangulo <x1> <y1> <x2> <y2> <x3> <y3>")
-
-    elif cmd.startswith("circulo"):
-        params = cmd.split(" ")
-        if len(params) == 4:
-            try:
-                x_centro = int(params[1])
-                y_centro = int(params[2])
-                radio = int(params[3])
-                circulo(x_centro, y_centro, radio)
-            except ValueError:
-                print("Comando incorrecto. Uso: circulo <x_centro> <y_centro> <radio>")
-        else:
-            print("Comando incorrecto. Uso: circulo <x_centro> <y_centro> <radio>")
-    
-    elif cmd.startswith("rectangulo"):
-        params = cmd.split(" ")
-        if len(params) >= 5:
-            try:
-                x = int(params[1])
-                y = int(params[2])
-                width = int(params[3])
-                height = int(params[4])
-                dibujar_rectangulo(x, y, width, height)
-            except ValueError:
-                print("Comando incorrecto. Uso: rectangulo <x> <y> <width> <height>")
-        else:
-            print("Comando incorrecto. Uso: rectangulo <x> <y> <width> <height>")
-
-    elif cmd == "color_fondo":
-        color_fondo()
-
-    # Comandos de los objetos
-    elif cmd == "equilatero":
-        x = int(input("Ingrese la coordenada x: "))
-        y = int(input("Ingrese la coordenada y: "))
-        lado = int(input("Ingrese el tamaño del lado: "))
-        Triangulos.dibujar_triangulo_equilatero(x, y, lado)
-
-    elif cmd == "isoceles":
-        x = int(input("Ingrese la coordenada x: "))
-        y = int(input("Ingrese la coordenada y: "))
-        base = int(input("Ingrese el tamaño de la base: "))
-        altura = int(input("Ingrese la altura: "))
-        Triangulos.dibujar_triangulo_isoceles(x, y, base, altura)
-
-    elif cmd == "escaleno":
-        x1 = int(input("Ingrese la coordenada x1: "))
-        y1 = int(input("Ingrese la coordenada y1: "))
-        x2 = int(input("Ingrese la coordenada x2: "))
-        y2 = int(input("Ingrese la coordenada y2: "))
-        x3 = int(input("Ingrese la coordenada x3: "))
-        y3 = int(input("Ingrese la coordenada y3: "))
-        Triangulos.dibujar_triangulo_escaleno(x1, y1, x2, y2, x3, y3)
-
-
-    
-
-
-
-    
+if __name__ == "__main__":
+    main()
