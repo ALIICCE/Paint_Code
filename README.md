@@ -1,7 +1,8 @@
-Este codigo se ejecuta preferiblemente en el ambiente de linux
+Este codigo se ejecuta en el ambiente de linux
+
 Se debe contar con lo siguiente para correrlo:
 
-  -pygame
+  - libreria de pygame instalada
   
   -python 3.8.10
 
